@@ -1,6 +1,8 @@
 #pragma once
 
 #include "grid.h"
+#include <iostream>
+#include <memory>
 #include <raylib.h>
 #include <vector>
 #include "drawables.h"
@@ -8,17 +10,19 @@
 
 class Scene { 
   public:
-    std::vector<Drawable*> drawables;
-    Grid grid;
+    std::vector<std::shared_ptr<Drawable>>drawables;
+    double worldscale = 1e6;
+    std::shared_ptr<Grid>grid;
 
     Scene() {
-      grid = Grid();
-      drawables.push_back(&grid);
-      drawables.push_back(new BlackHole(8.2e36, 0.62, grid));
+      grid = std::make_shared<Grid>(Grid(worldscale));
+      drawables.push_back(grid);
+      std::cout << "scene grid: " <<  grid << std::endl;
+      drawables.push_back(std::make_shared<BlackHole>(BlackHole(8.2e36, 0.62, grid)));
     }
 
     void Draw() {
-      for (Drawable *d : drawables) {
+      for (std::shared_ptr<Drawable> d : drawables) {
         d->draw();
       }
     }
