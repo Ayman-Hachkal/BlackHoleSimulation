@@ -14,8 +14,8 @@ class Scene {
     double worldscale = 1e6;
     std::shared_ptr<Grid>grid;
 
-    Scene() {
-      grid = std::make_shared<Grid>(Grid(worldscale));
+    Scene(const Camera &cam) {
+      grid = std::make_shared<Grid>(Grid(worldscale, cam));
       drawables.push_back(grid);
       std::cout << "scene grid: " <<  grid << std::endl;
       drawables.push_back(std::make_shared<BlackHole>(BlackHole(8.2e36, 0.62, grid)));

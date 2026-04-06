@@ -24,6 +24,16 @@ class BlackHole : public body
     void draw() override {
       DrawSphereEx(toVector3(position), 2, 32, 32, RAYWHITE);
     }
+
+    void move(const vec &new_position) {
+      position = position + new_position;
+      grid->calculateOffsets(*this);
+    }
+
+    void replacePosition(const vec& new_position) { 
+      position = new_position;
+    }
+    
   private:
     std::shared_ptr<Grid> grid;
 };

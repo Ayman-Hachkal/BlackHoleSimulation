@@ -10,6 +10,9 @@
 #include "drawables.h"
 #include "raylib.h"
 
+// Position will be a whole number vector
+// Offset will be a double vector
+// WorldPos will be a double
 
 struct point {
   vec pos;
@@ -24,11 +27,16 @@ struct row {
 class Grid : public Drawable {
   public: 
   std::vector<row> rows;
+  std::vector<body> bodies;
   int lowerRange {-100};
   int upperRange { 100}; 
   double worldscale;
+  int renderDistance;
+  Camera cam;
 
-  Grid(double worldscale = 1) : worldscale(worldscale) {
+  Grid(double worldscale, const Camera &cam) : worldscale(worldscale) {
+    this->cam =  cam;
+    renderDistance = 100;
     for (int x = lowerRange; x <= upperRange; x++) {
       row r;
       for (int z = lowerRange; z <= upperRange; z++) {
@@ -42,6 +50,9 @@ class Grid : public Drawable {
     }
   }
 
+  void add_body(body &b) {
+  }
+
   void calculateOffsets(const body &b) {
     for (row &r : rows) {
       for (point &p : r.points) {
@@ -53,7 +64,16 @@ class Grid : public Drawable {
     std::cout << "Offset caculated " << std::endl;
   }
 
-  void draw() override {
+  void draw() {
+    for (int x = 0; x < renderDistance; x++) {
+      for (int z = 0; z < renderDistance; z++) {
+          // Make Point
+          point p;
+          p.pos = vec(x, 0, z); 
+          p.worldPos = p.pos * worldscale;
+          p.offset = vec(0, 0, 0);
+    }
+
     for (int rowIndex = 0; rowIndex < rows.size() - 1; rowIndex++) {
       row &r = rows[rowIndex];
       row &nextr = rows[rowIndex + 1];
@@ -84,3 +104,8 @@ class Grid : public Drawable {
     }
   }
 };
+
+
+// Don't make grid at start, instead make it when needed, 
+// To do that we can genearte on everyloop, based on a ("Render Distance") more efficinet,
+// can generate lower quality grid if out of distance
