@@ -11,4 +11,6 @@ class body : public Drawable{
    double spin;
 
    body (long mass, double spin, double radius, vec position) : mass(mass) , spin(spin) , radius(radius) , position(position){}
+
+   ~body(){}
 };
